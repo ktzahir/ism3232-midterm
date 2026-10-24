@@ -139,3 +139,28 @@ def test_pallet_at_total_threshold():
 def test_partner_discount_below_minimum():
     """Check that partner status gives no discount below 20 bags."""
     assert get_bulk_discount(19, True) == 0.0
+
+
+def test_discount_just_below_eighty():
+    """Check that 79 bags still receive the standard discount."""
+    assert get_bulk_discount(79) == 0.09
+
+
+def test_shipping_fee_just_below_threshold():
+    """Check that a discounted cost below $250 adds shipping."""
+    assert round(calculate_shipment_total(24.99, 10), 2) == 284.90
+
+
+def test_shipping_fee_at_threshold():
+    """Check that a discounted cost of exactly $250 avoids shipping."""
+    assert round(calculate_shipment_total(25.00, 10), 2) == 250.00
+
+
+def test_pallet_total_just_above_threshold():
+    """Check that a shipment over $700 qualifies for a pallet."""
+    assert needs_pallet(61, 700.01) is True
+
+
+def test_pallet_bags_just_above_threshold():
+    """Check that 61 bags qualifies when the total is over $700."""
+    assert needs_pallet(61, 800.00) is True
