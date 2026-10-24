@@ -53,7 +53,7 @@ main.py: Runs the program and prints the shipment report.
 
 tests/test_business_rules.py: Contains the 27 tests used to check the functions.
 
-tests/init.py: Marks the tests folder as a Python package.
+tests/__init__.py Marks the tests folder as a Python package.
 
 requirements.txt: Lists the Python packages needed for the project.
 
