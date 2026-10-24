@@ -7,6 +7,9 @@ LARGE_ORDER_DISCOUNT = 0.14
 PARTNER_EXTRA_DISCOUNT = 0.04
 SHIPPING_FEE = 35.00
 FREE_SHIPPING_THRESHOLD = 250.00
+PREPAYMENT_THRESHOLD = 1500.00
+PALLET_MIN_BAGS = 60
+PALLET_TOTAL_THRESHOLD = 700.00
 
 
 def calculate_bean_cost(bag_price: float, bags: int) -> float:
@@ -42,3 +45,13 @@ def calculate_shipment_total(
         discounted_cost += SHIPPING_FEE
 
     return discounted_cost
+
+
+def requires_prepayment(total: float) -> bool:
+    """Return whether a shipment requires prepayment."""
+    return total >= PREPAYMENT_THRESHOLD
+
+
+def needs_pallet(bags: int, total: float) -> bool:
+    """Return whether a shipment needs a freight pallet."""
+    return bags > PALLET_MIN_BAGS and total > PALLET_TOTAL_THRESHOLD

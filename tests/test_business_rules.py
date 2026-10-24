@@ -2,6 +2,8 @@ from business_rules import (
     calculate_bean_cost,
     calculate_shipment_total,
     get_bulk_discount,
+    needs_pallet,
+    requires_prepayment,
 )
 
 
@@ -38,3 +40,28 @@ def test_shipment_with_shipping_fee():
 def test_shipment_without_shipping_fee():
     """Check that larger orders avoid the shipping fee."""
     assert round(calculate_shipment_total(13.00, 40), 2) == 473.20
+
+
+def test_prepayment_below_threshold():
+    """Check that a shipment below $1500 needs no prepayment."""
+    assert requires_prepayment(1499.99) is False
+
+
+def test_prepayment_at_threshold():
+    """Check that a $1500 shipment requires prepayment."""
+    assert requires_prepayment(1500.00) is True
+
+
+def test_pallet_below_bag_threshold():
+    """Check that 60 bags do not require a pallet."""
+    assert needs_pallet(60, 800.00) is False
+
+
+def test_pallet_above_both_thresholds():
+    """Check that a large shipment requires a pallet."""
+    assert needs_pallet(61, 800.00) is True
+
+
+def test_pallet_below_total_threshold():
+    """Check that a shipment below $700 needs no pallet."""
+    assert needs_pallet(61, 699.99) is False
