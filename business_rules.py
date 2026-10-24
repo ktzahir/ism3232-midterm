@@ -92,3 +92,15 @@ def largest_shipment(shipments: list) -> str:
             largest_buyer = shipment["buyer"]
 
     return largest_buyer
+
+
+def format_shipment_line(
+    buyer: str, total: float, prepayment: bool, pallet: bool
+) -> str:
+    """Format a shipment as one readable report line."""
+    prepayment_text = "yes" if prepayment else "no"
+    pallet_text = "yes" if pallet else "no"
+
+    return (
+        f"{buyer}: ${total:.2f} | prepayment: {prepayment_text} | pallet: {pallet_text}"
+    )

@@ -1,6 +1,7 @@
 from business_rules import (
     calculate_bean_cost,
     calculate_shipment_total,
+    format_shipment_line,
     get_bulk_discount,
     largest_shipment,
     needs_pallet,
@@ -116,3 +117,25 @@ def test_largest_shipment_tie():
     ]
 
     assert largest_shipment(shipments) == "Cafe A"
+
+
+def test_format_shipment_line_no_flags():
+    """Check report formatting without prepayment or pallet."""
+    result = format_shipment_line("Uptown Bakery", 175.00, False, False)
+    assert result == "Uptown Bakery: $175.00 | prepayment: no | pallet: no"
+
+
+def test_format_shipment_line_both_flags():
+    """Check report formatting with prepayment and pallet."""
+    result = format_shipment_line("Zenith Grocers", 1892.00, True, True)
+    assert result == "Zenith Grocers: $1892.00 | prepayment: yes | pallet: yes"
+
+
+def test_pallet_at_total_threshold():
+    """Check that exactly $700 does not require a pallet."""
+    assert needs_pallet(61, 700.00) is False
+
+
+def test_partner_discount_below_minimum():
+    """Check that partner status gives no discount below 20 bags."""
+    assert get_bulk_discount(19, True) == 0.0
