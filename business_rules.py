@@ -55,3 +55,40 @@ def requires_prepayment(total: float) -> bool:
 def needs_pallet(bags: int, total: float) -> bool:
     """Return whether a shipment needs a freight pallet."""
     return bags > PALLET_MIN_BAGS and total > PALLET_TOTAL_THRESHOLD
+
+
+def total_shipped(shipments: list) -> float:
+    """Calculate the total value of all coffee shipments."""
+    total = 0.0
+
+    for shipment in shipments:
+        shipment_total = calculate_shipment_total(
+            shipment["bag_price"],
+            shipment["bags"],
+            shipment["partner"],
+        )
+        total += shipment_total
+
+    return total
+
+
+def largest_shipment(shipments: list) -> str:
+    """Return the buyer with the largest shipment total."""
+    if not shipments:
+        return ""
+
+    largest_buyer = ""
+    largest_total = -1.0
+
+    for shipment in shipments:
+        shipment_total = calculate_shipment_total(
+            shipment["bag_price"],
+            shipment["bags"],
+            shipment["partner"],
+        )
+
+        if shipment_total > largest_total:
+            largest_total = shipment_total
+            largest_buyer = shipment["buyer"]
+
+    return largest_buyer
